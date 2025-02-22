@@ -1,0 +1,3 @@
+*.h5 !text !filter !merge !diff
+*.csv !text !filter !merge !diff
+*.w2v !text !filter !merge !diff
