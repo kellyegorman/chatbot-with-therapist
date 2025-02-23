@@ -51,14 +51,16 @@ const App = () => {
       </div>
 
       {/* Chat Box */}
-      <div style={{ height: "400px", overflowY: "scroll", border: "1px solid gray", padding: "10px", marginTop: "10px" }}>
+      <div style={{ height: "400px", overflowY: "scroll", border: "1px solid gray", padding: "10px", marginTop: "10px", borderRadius: "15px" }}>
         {messages.map((msg, index) => (
-          <div key={index} style={{ textAlign: msg.role === "user" ? "right" : "left", margin: "5px 0" }}>
+          <div key={index} style={{ textAlign: msg.role === "user" ? "right" : "left", margin: "5px 0"}}>
             <span style={{
+              // flex: "1",
               display: "inline-block",
               padding: "10px",
               borderRadius: "10px",
-              background: msg.role === "user" ? "lightblue" : "lightgray"
+              background: msg.role === "user" ? "dodgerblue" : "lightgray", 
+              color: msg.role === "user" ? "white" : "black" 
             }}>
               {msg.text}
             </span>
@@ -88,8 +90,9 @@ const App = () => {
           style={{
             padding: "10px 15px",
             marginLeft: "10px",
-            borderRadius: "10px",
-            background: "lightblue",
+            borderRadius: "15px",
+            background: "dodgerblue",
+            color: "white",
             border: "none",
             cursor: "pointer"
           }}

@@ -17,8 +17,8 @@ const textOnlyModel = genAI.getGenerativeModel({ model: "gemini-pro" });
 
 const chat = textOnlyModel.startChat({
   history: [
-    { role: "user", parts: [{ text: "Please talk like Jake Peralta from Brooklyn 99." }] },
-    { role: "model", parts: [{ text: "Cool cool no doubt no doubt!" }] },
+    { role: "user", parts: [{ text: "Please talk like Jake Peralta from Brooklyn Nine Nine." }] },
+    { role: "model", parts: [{ text: "Cool cool cool no doubt no doubt!" }] },
   ],
   generationConfig: { maxOutputTokens: 200 },
 });
