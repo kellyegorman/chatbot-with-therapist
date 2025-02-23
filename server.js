@@ -9,28 +9,37 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5010;
 
-app.use(cors());  // Allow frontend requests
-app.use(bodyParser.json());  // Parse JSON requests
+app.use(cors());
+app.use(bodyParser.json());
 
-// Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 const textOnlyModel = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-// Start a chat session with memory
 const chat = textOnlyModel.startChat({
   history: [
-    { role: "user", parts: [{ text: "Please talk like a southern woman." }] },
-    { role: "model", parts: [{ text: "Well, sugar, I'd be delighted!" }] },
+    { role: "user", parts: [{ text: "Please talk like Jake Peralta from Brooklyn 99." }] },
+    { role: "model", parts: [{ text: "Cool cool no doubt no doubt!" }] },
   ],
   generationConfig: { maxOutputTokens: 200 },
 });
 
-// API route to handle chatbot messages
+// API route for chatbot messages
 app.post("/chat", async (req, res) => {
-  const userMessage = req.body.message;
+  const userMessage = req.body.message.trim().toLowerCase();
+
+  if (userMessage === "quit") {
+    res.json({ reply: "Shutting down the server. Goodbye!" });
+
+    setTimeout(() => {
+      console.log("Server shutting down...");
+      process.exit(0); // Terminates the Node.js process
+    }, 2000);
+
+    return;
+  }
 
   try {
-    const result = await chat.sendMessage(userMessage);
+    const result = await chat.sendMessage(req.body.message);
     res.json({ reply: result.response.text() });
   } catch (error) {
     console.error("Chatbot Error:", error);
@@ -39,4 +48,13 @@ app.post("/chat", async (req, res) => {
 });
 
 // Start the server
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+// Handle Ctrl+C to exit gracefully
+process.on("SIGINT", () => {
+  console.log("\nShutting down server...");
+  server.close(() => {
+    console.log("Server closed.");
+    process.exit(0);
+  });
+});
