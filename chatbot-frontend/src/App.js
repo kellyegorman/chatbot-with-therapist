@@ -36,8 +36,8 @@ const App = () => {
       {/* Header with Image and Name */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}>
       <img
-  src="/brookyn-99-jake.png" 
-  alt="Jake Peralta"
+  src="/therapist.png" 
+  alt="My Therapist"
   style={{ width: "60px", height: "60px", borderRadius: "50%", marginTop: "10px" }}
 />
 <h2 style={{ 
@@ -45,7 +45,7 @@ const App = () => {
   fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif", 
   fontWeight: "600"
 }}>
-  Jake Peralta
+  My Therapist
 </h2>
 
       </div>
