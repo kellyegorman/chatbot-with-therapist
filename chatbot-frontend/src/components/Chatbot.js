@@ -1,4 +1,4 @@
-// components/Chatbot.js
+// Chatbot.js remains the same as in your original code
 import React, { useState } from "react";
 import axios from "axios";
 
@@ -100,3 +100,4 @@ const Chatbot = () => {
 };
 
 export default Chatbot;
+
