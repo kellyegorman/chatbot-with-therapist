@@ -1,4 +1,4 @@
-// Chatbot.js remains the same as in your original code
+// Chatbot.js
 import React, { useState } from "react";
 import axios from "axios";
 
@@ -10,7 +10,7 @@ const Chatbot = () => {
     if (!input) return;
 
     const userMessage = { role: "user", text: input };
-    setMessages([...messages, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
 
     if (input.toLowerCase() === "quit") {
       alert("Closing chatbot...");
@@ -24,7 +24,7 @@ const Chatbot = () => {
       });
 
       const botMessage = { role: "bot", text: response.data.reply };
-      setMessages([...messages, userMessage, botMessage]);
+      setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -33,71 +33,138 @@ const Chatbot = () => {
   };
 
   return (
-    <div style={{ maxWidth: "400px", margin: "auto", textAlign: "center" }}>
-      {/* Header with Image and Name */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}>
-        <img
-          src="/therapist.png"
-          alt="My Therapist"
-          style={{ width: "60px", height: "60px", borderRadius: "50%", marginTop: "10px" }}
-        />
-        <h2 style={{ margin: 0, fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif", fontWeight: "600" }}>
-          My Therapist
-        </h2>
-      </div>
-
-      {/* Chat Box */}
-      <div style={{ height: "400px", overflowY: "scroll", border: "1px solid gray", padding: "10px", marginTop: "10px", borderRadius: "15px" }}>
-        {messages.map((msg, index) => (
-          <div key={index} style={{ textAlign: msg.role === "user" ? "right" : "left", margin: "5px 0" }}>
-            <span style={{
-              display: "inline-block",
-              padding: "10px",
-              borderRadius: "10px",
-              background: msg.role === "user" ? "dodgerblue" : "lightgray",
-              color: msg.role === "user" ? "white" : "black"
-            }}>
-              {msg.text}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      {/* Input Box and Send Button */}
-      <div style={{ display: "flex", alignItems: "center", marginTop: "10px" }}>
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyPress={(e) => e.key === "Enter" && sendMessage()}
-          placeholder="Type a message..."
+    <div
+      style={{
+        minHeight: "100vh",
+        backgroundImage: "url('/office_2.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "20px",
+      }}
+      
+      
+    >
+      <div
+        style={{
+          maxWidth: "400px",
+          width: "100%",
+          backgroundColor: "rgba(255, 255, 255, 0.9)",
+          borderRadius: "20px",
+          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+          padding: "20px",
+          textAlign: "center",
+        }}
+      >
+        {/* Header with Image and Name */}
+        <div
           style={{
-            flex: "1",
-            padding: "10px",
-            borderRadius: "20px",
-            border: "1px solid gray",
-            outline: "none",
-            fontFamily: "Verdana"
-          }}
-        />
-        <button
-          onClick={sendMessage}
-          style={{
-            padding: "10px 15px",
-            marginLeft: "10px",
-            borderRadius: "15px",
-            background: "dodgerblue",
-            color: "white",
-            border: "none",
-            cursor: "pointer"
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "10px",
           }}
         >
-          Send
-        </button>
+          <img
+            src="/therapist.png"
+            alt="My Therapist"
+            style={{
+              width: "60px",
+              height: "60px",
+              borderRadius: "50%",
+              marginTop: "10px",
+            }}
+          />
+          <h2
+            style={{
+              margin: 0,
+              fontFamily:
+                "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+              fontWeight: "600",
+            }}
+          >
+            My Therapist
+          </h2>
+        </div>
+
+        {/* Chat Box */}
+        <div
+          style={{
+            height: "400px",
+            overflowY: "scroll",
+            border: "1px solid gray",
+            padding: "10px",
+            marginTop: "10px",
+            borderRadius: "15px",
+            backgroundColor: "#f9f9f9",
+          }}
+        >
+          {messages.map((msg, index) => (
+            <div
+              key={index}
+              style={{
+                textAlign: msg.role === "user" ? "right" : "left",
+                margin: "5px 0",
+              }}
+            >
+              <span
+                style={{
+                  display: "inline-block",
+                  padding: "10px",
+                  borderRadius: "10px",
+                  background: msg.role === "user" ? "dodgerblue" : "lightgray",
+                  color: msg.role === "user" ? "white" : "black",
+                }}
+              >
+                {msg.text}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Input Box and Send Button */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginTop: "10px",
+          }}
+        >
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyPress={(e) => e.key === "Enter" && sendMessage()}
+            placeholder="Type a message..."
+            style={{
+              flex: "1",
+              padding: "10px",
+              borderRadius: "20px",
+              border: "1px solid gray",
+              outline: "none",
+              fontFamily: "Verdana",
+            }}
+          />
+          <button
+            onClick={sendMessage}
+            style={{
+              padding: "10px 15px",
+              marginLeft: "10px",
+              borderRadius: "15px",
+              background: "dodgerblue",
+              color: "white",
+              border: "none",
+              cursor: "pointer",
+            }}
+          >
+            Send
+          </button>
+        </div>
       </div>
     </div>
   );
 };
 
 export default Chatbot;
-
