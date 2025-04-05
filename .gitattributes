@@ -1,3 +1,6 @@
+*.h5 filter=lfs diff=lfs merge=lfs -text
+*.csv filter=lfs diff=lfs merge=lfs -text
+*.w2v filter=lfs diff=lfs merge=lfs -text
 *.h5 !text !filter !merge !diff
 *.csv !text !filter !merge !diff
 *.w2v !text !filter !merge !diff
