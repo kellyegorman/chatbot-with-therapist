@@ -6,6 +6,23 @@ const Chatbot = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
 
+  // Helper to extract sentiment score and compute gradient color
+  const getSentimentColor = (text) => {
+    const regex = /\s*\[Sentiment: .* \(score:\s*([\d.]+)\)\]$/;
+    const match = text.match(regex);
+    if (match && match[1]) {
+      const score = parseFloat(match[1]);
+      // Compute red-to-green gradient:
+      // score = 0  -> red (rgb(255,0,0))
+      // score = 1  -> green (rgb(0,255,0))
+      const red = Math.round((1 - score) * 255);
+      const green = Math.round(score * 255);
+      return { color: `rgb(${red}, ${green}, 0)`, cleanedText: text.replace(regex, "") };
+    }
+    // Default for no sentiment info:
+    return { color: "lightgray", cleanedText: text };
+  };
+
   const sendMessage = async () => {
     if (!input) return;
 
@@ -44,8 +61,6 @@ const Chatbot = () => {
         justifyContent: "center",
         padding: "20px",
       }}
-      
-      
     >
       <div
         style={{
@@ -101,27 +116,40 @@ const Chatbot = () => {
             backgroundColor: "#f9f9f9",
           }}
         >
-          {messages.map((msg, index) => (
-            <div
-              key={index}
-              style={{
-                textAlign: msg.role === "user" ? "right" : "left",
-                margin: "5px 0",
-              }}
-            >
-              <span
+          {messages.map((msg, index) => {
+            let displayText = msg.text;
+            let backgroundColor =
+              msg.role === "user" ? "dodgerblue" : "lightgray";
+
+            // If the message is from the bot, check for sentiment score
+            if (msg.role === "bot") {
+              const { color, cleanedText } = getSentimentColor(msg.text);
+              backgroundColor = color;
+              displayText = cleanedText;
+            }
+
+            return (
+              <div
+                key={index}
                 style={{
-                  display: "inline-block",
-                  padding: "10px",
-                  borderRadius: "10px",
-                  background: msg.role === "user" ? "dodgerblue" : "lightgray",
-                  color: msg.role === "user" ? "white" : "black",
+                  textAlign: msg.role === "user" ? "right" : "left",
+                  margin: "5px 0",
                 }}
               >
-                {msg.text}
-              </span>
-            </div>
-          ))}
+                <span
+                  style={{
+                    display: "inline-block",
+                    padding: "10px",
+                    borderRadius: "10px",
+                    background: backgroundColor,
+                    color: msg.role === "user" ? "white" : "black",
+                  }}
+                >
+                  {displayText}
+                </span>
+              </div>
+            );
+          })}
         </div>
 
         {/* Input Box and Send Button */}
