@@ -5,3 +5,7 @@ node_modules
 tweets.csv
 tweets_2.csv
 model.h5
+model.h5
+tweets.csv
+tweets_2.csv
+model.w2v
