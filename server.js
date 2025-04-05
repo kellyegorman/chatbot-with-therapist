@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
+import axios from "axios";  // Make sure to install axios (npm install axios)
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 dotenv.config();
@@ -38,31 +39,42 @@ const chat = textOnlyModel.startChat({
   generationConfig: { maxOutputTokens: 200 },
 });
 
-// API route for chatbot messages
+// API route for chatbot messages with integrated sentiment analysis
 app.post("/chat", async (req, res) => {
   const userMessage = req.body.message.trim();
 
   if (userMessage.toLowerCase() === "quit") {
     res.json({ reply: "Shutting down the server. Goodbye!" });
-
     setTimeout(() => {
       console.log("Server shutting down...");
       process.exit(0);
     }, 2000);
-
     return;
   }
 
   try {
+    // --- Call the Python sentiment analysis service ---
+    const sentimentResponse = await axios.post("http://localhost:5001/predict", {
+      text: userMessage
+    });
+    const { sentiment, score } = sentimentResponse.data;
+    
+    // Log or use the sentiment as needed.
+    console.log(`User sentiment: ${sentiment} (score: ${score.toFixed(2)})`);
+
+    // --- Generate a response using the generative model ---
     const result = await chat.sendMessage(userMessage);
     let reply = result.response.text();
 
-    // Remove bullet points and numbered lists
-    reply = reply.replace(/^\d+\.\s+/gm, "").replace(/^- /gm, "");
+    // Optionally, append the sentiment info to the reply:
+    reply += `\n\n[Sentiment: ${sentiment} (score: ${score.toFixed(2)})]`;
 
+    // Remove bullet points and numbered lists from the reply.
+    reply = reply.replace(/^\d+\.\s+/gm, "").replace(/^- /gm, "");
+    
     res.json({ reply });
   } catch (error) {
-    console.error("Chatbot Error:", error);
+    console.error("Chatbot or Sentiment Service Error:", error);
     res.status(500).json({ reply: "Oops! Something went wrong." });
   }
 });
