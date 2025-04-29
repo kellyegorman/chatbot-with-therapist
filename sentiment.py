@@ -6,18 +6,17 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.optimizers import Adam
 
-# Load the tokenizer and model
+#load
 MODEL_NAME = "bert-base-uncased"
 tokenizer = BertTokenizer.from_pretrained(MODEL_NAME)
 model = TFBertForSequenceClassification.from_pretrained(MODEL_NAME, num_labels=2)
 
-# Load dataset
 def load_data(file_path):
     df = pd.read_csv(file_path)
-    df = df[['text', 'label']]  # Ensure columns are named 'text' and 'label'
+    df = df[['text', 'label']]  
     return df
 
-# Tokenize data
+#tokenize
 def tokenize_data(texts, labels, max_length=128):
     encodings = tokenizer(texts.tolist(), truncation=True, padding=True, max_length=max_length)
     input_ids = np.array(encodings['input_ids'])
@@ -25,7 +24,7 @@ def tokenize_data(texts, labels, max_length=128):
     labels = np.array(labels)
     return input_ids, attention_masks, labels
 
-# Train the model
+#Train  model
 def train_model(dataset_path):
     df = load_data(dataset_path)
     
@@ -42,7 +41,7 @@ def train_model(dataset_path):
 
     model.save_pretrained("./bert_sentiment_model")
 
-# Predict sentiment
+#Predict sentiment
 def predict(text):
     inputs = tokenizer(text, return_tensors="tf", truncation=True, padding=True, max_length=128)
     outputs = model(inputs['input_ids'], attention_mask=inputs['attention_mask'])
@@ -51,11 +50,9 @@ def predict(text):
     sentiment = "Positive" if np.argmax(prediction) == 1 else "Negative"
     return sentiment
 
-# Example Usage
 if __name__ == "__main__":
-    dataset_path = "tweets.csv"  # Ensure you have a CSV file with 'text' and 'label' columns
+    dataset_path = "tweets.csv"  
     train_model(dataset_path)
     
-    # Test a sample prediction
     sample_text = "I love this product!"
     print(f"Sentiment: {predict(sample_text)}")
